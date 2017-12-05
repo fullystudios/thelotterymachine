@@ -19,4 +19,22 @@ class ExampleTest extends TestCase
 
         $this->assertEquals(1, Lottery::where('name', 'Laravel Lottery')->count());
     }
+
+    /** @test */
+    public function form_has_correct_inputs()
+    {
+        $response = $this->get(route('lottery.create'));
+        $response->assertSee('name="name"');
+        $response->assertSee('<button type="submit"');
+    }
+
+    /** @test */
+    public function lottery_details_are_shown_on_lottery_page()
+    {
+        $lottery = create(Lottery::class, ['name' => 'Some lottery name that does not exist until now']);
+
+        $response = $this->get(route('lottery.show', $lottery));
+
+        $response->assertSee($lottery->name);
+    }
 }

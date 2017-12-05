@@ -15,4 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('lotteries', 'LotteryController@store')->name('lottery.store');
+Route::get('lottery/create', 'LotteryController@create')->name('lottery.create');
 Route::get('lottery/{lottery}', 'LotteryController@show')->name('lottery.show');

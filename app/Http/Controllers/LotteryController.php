@@ -18,8 +18,8 @@ class LotteryController extends Controller
         return redirect()->route('lottery.show', [$lottery]);
     }
 
-    public function show()
+    public function show(Lottery $lottery)
     {
-        return view('lottery.show');
+        return view('lottery.show', compact('lottery'));
     }
 }

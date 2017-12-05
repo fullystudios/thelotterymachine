@@ -5,8 +5,8 @@ This machine is made for drawing winners. It's intended use is for the Magical M
 This is a Laravel 5.5 project. Technical specifications for Laravel is found [here](https://laravel.com/docs/5.5/).
 
 ## Features
-1. A new lottery can be created (TODO)
-2. A lotter has winning tickets (TODO)
+1. A new lottery can be created
+2. A lottery has winning tickets (TODO)
 3. Emails can be added to the lottery (TODO)
 4. You can draw a winning email from a lottery (TODO)
 5. You can draw as many winning tickets as are available (TODO)

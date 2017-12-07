@@ -35,6 +35,20 @@ class ExampleTest extends TestCase
 
         $response = $this->get(route('lottery.show', $lottery));
 
+        $response->assertStatus(200);
         $response->assertSee($lottery->name);
+    }
+
+    /** @test */
+    public function lotteries_page_lists_lotteries()
+    {
+        $lotteryA = create(Lottery::class, ['name' => 'Super lottery A']);
+        $lotteryB = create(Lottery::class, ['name' => 'Super lottery B']);
+
+        $response = $this->get(route('lottery.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee($lotteryA->name);
+        $response->assertSee($lotteryB->name);
     }
 }

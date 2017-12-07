@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class LotteryController extends Controller
 {
+    public function index()
+    {
+        $lotteries = Lottery::all();
+        return view('lottery.index', compact('lotteries'));
+    }
+
     public function create()
     {
         return view('lottery.create');

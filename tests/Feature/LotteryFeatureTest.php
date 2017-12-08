@@ -6,7 +6,7 @@ use App\Lottery;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class LotteryFeatureTest extends TestCase
 {
     use RefreshDatabase;
 

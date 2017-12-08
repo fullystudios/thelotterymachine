@@ -6,7 +6,7 @@ This is a Laravel 5.5 project. Technical specifications for Laravel is found [he
 
 ## Features
 1. A new lottery can be created
-2. A lottery has winning tickets (TODO)
+2. A lottery has winning tickets
 3. Emails can be added to the lottery (TODO)
 4. You can draw a winning email from a lottery (TODO)
 5. You can draw as many winning tickets as are available (TODO)
@@ -16,6 +16,8 @@ This is a Laravel 5.5 project. Technical specifications for Laravel is found [he
 2. Composer install
 3. Yarn or NPM install
 4. Setup .env file for your environment
+5. Run `php artisan key:generate`
+6. Run migrations
 
 #### Getting help - dev
 Leave an issue on Github, also me (Mikael) is on laravelse.slack.com as well as … well other places.

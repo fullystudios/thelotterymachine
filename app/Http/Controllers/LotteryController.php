@@ -21,6 +21,7 @@ class LotteryController extends Controller
     public function store(Request $request)
     {
         $lottery = Lottery::create($request->all());
+        $lottery->addTickets($request->tickets);
         return redirect()->route('lottery.show', [$lottery]);
     }
 

@@ -6,16 +6,15 @@ use App\Lottery;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class LotteryUnitTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function show_path_is_returned()
+    public function can_create_winning_ticktes()
     {
-        // Path helper, not sure if it should be tested.
         $lottery = create(Lottery::class);
-        
-        $this->assertTrue(str_contains("lottery/{$lottery->id}"))
+        $lottery->addTickets(2);
+        $this->assertEquals($lottery->winningTickets()->count(), 2);
     }
 }

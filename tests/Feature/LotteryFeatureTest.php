@@ -25,6 +25,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get(route('lottery.create'));
         $response->assertSee('name="name"');
+        $response->assertSee('name="tickets"');
         $response->assertSee('<button type="submit"');
     }
 
@@ -50,5 +51,15 @@ class ExampleTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($lotteryA->name);
         $response->assertSee($lotteryB->name);
+    }
+
+    /** @test */
+    public function when_lottery_is_created_corresponding_winning_tickets_are_created()
+    {
+        $lotteryParams = make(Lottery::class, ['name' => 'Laravel Lottery'])->toArray();
+        $lotteryParams['tickets'] = 2;
+        $response = $this->json('post', route('lottery.store'), $lotteryParams);
+
+        $this->assertEquals(2, Lottery::where('name', 'Laravel Lottery')->first()->winningTickets->count());
     }
 }

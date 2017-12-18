@@ -29,4 +29,9 @@ class LotteryController extends Controller
     {
         return view('lottery.show', compact('lottery'));
     }
+
+    public function edit(Lottery $lottery)
+    {
+        return view('lottery.edit', compact('lottery'));
+    }
 }

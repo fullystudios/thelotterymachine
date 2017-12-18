@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Lottery;
 use Tests\TestCase;
+use App\Participant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LotteryFeatureTest extends TestCase
@@ -30,14 +31,29 @@ class LotteryFeatureTest extends TestCase
     }
 
     /** @test */
+    public function when_editing_a_lottery_you_can_add_participants__fields_are_seen()
+    {
+        $lottery = create(Lottery::class);
+        $participant = make(Participant::class, ['email' => 'jane@example.com']);
+        $response = $this->get($lottery->path('edit'));
+
+        $response->assertSee('name="email"');
+        $response->assertSee('button type="submit"');
+    }
+
+    /** @test */
     public function lottery_details_are_shown_on_lottery_page()
     {
         $lottery = create(Lottery::class, ['name' => 'Some lottery name that does not exist until now']);
-
+        $participant = make(Participant::class, ['email' => 'jane@example.com']);
+        $lottery->addParticipant($participant->toArray());
         $response = $this->get(route('lottery.show', $lottery));
 
+        $editLotteryPath = $lottery->path('edit');
         $response->assertStatus(200);
         $response->assertSee($lottery->name);
+        $response->assertSee($participant->email);
+        $response->assertSee("<a href=\"{$editLotteryPath}\">Add participant</a>");
     }
 
     /** @test */
@@ -61,5 +77,17 @@ class LotteryFeatureTest extends TestCase
         $response = $this->json('post', route('lottery.store'), $lotteryParams);
 
         $this->assertEquals(2, Lottery::where('name', 'Laravel Lottery')->first()->winningTickets->count());
+    }
+
+    /** @test */
+    public function participants_can_be_added_in_lottery()
+    {
+        $participant = make(Participant::class, ['email' => 'jane@example.com']);
+
+        $lottery = create(Lottery::class);
+
+        $lottery->addParticipant($participant->toArray());
+
+        $this->assertCount(1, $lottery->participants);
     }
 }

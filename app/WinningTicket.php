@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class WinningTicket extends Model
 {
+    protected $fillable = ['participant_id'];
+
     public function winner()
     {
-        return $this->belongsTo(User::class, 'winner_id');
+        return $this->belongsTo(Participant::class, 'participant_id');
     }
 
-    public function setWinner(User $winner)
+    public function assignWinner(Participant $participant)
     {
-        $this->winner()->associate($winner);
+        return $this->update(['participant_id' => $participant->id]);
     }
 }

@@ -1,9 +1,9 @@
-<?php
+<?php 
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
-use App\User;
 use Tests\TestCase;
+use App\Participant;
 use App\WinningTicket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,11 +12,16 @@ class WinningTicketUnitTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function can_create_winning_ticktes()
+    public function can_assign_a_winner()
     {
-        $ticket = new WinningTicket();
-        $user = create(User::class);
-        $ticket->setWinner($user);
-        $this->assertEquals($user->email, $ticket->winner->email);
+        $ticket = create(WinningTicket::class);
+        $participant = create(Participant::class);
+
+        $ticket->assignWinner($participant);
+        $ticket->fresh();
+        $winnerId = $ticket->winner->id;
+        $participantId = $participant->id;
+
+        $this->assertEquals($winnerId, $participantId);
     }
 }

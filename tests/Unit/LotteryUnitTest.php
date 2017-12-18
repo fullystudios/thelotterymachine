@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Lottery;
 use Tests\TestCase;
+use App\Participant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LotteryUnitTest extends TestCase
@@ -25,6 +26,20 @@ class LotteryUnitTest extends TestCase
 
         $lottery->addTickets(2);
 
-        $this->assertCount(2, $lottery->freeTickets);
+        $this->assertCount(2, $lottery->availableTickets);
+    }
+
+    /** @test */
+    public function can_draw_a_winner_for_a_ticket()
+    {
+        $lottery = create(Lottery::class);
+        $participant = make(Participant::class, ['email' => 'jane@example.com']);
+        $lottery->addParticipant($participant->toArray());
+        $lottery->addTickets(2);
+
+        $lottery->drawWinner();
+        $lottery->load('availableTickets');
+        $this->assertEquals($lottery->winners->first()->email, 'jane@example.com');
+        $this->assertCount(1, $lottery->availableTickets);
     }
 }

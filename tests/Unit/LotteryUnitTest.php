@@ -17,4 +17,14 @@ class LotteryUnitTest extends TestCase
         $lottery->addTickets(2);
         $this->assertEquals($lottery->winningTickets()->count(), 2);
     }
+
+    /** @test */
+    public function can_get_number_of_free_winning_tickets()
+    {
+        $lottery = create(Lottery::class);
+
+        $lottery->addTickets(2);
+
+        $this->assertCount(2, $lottery->freeTickets);
+    }
 }

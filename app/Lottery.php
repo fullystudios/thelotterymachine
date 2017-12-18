@@ -13,6 +13,11 @@ class Lottery extends Model
         return $this->hasMany(WinningTicket::class);
     }
 
+    public function freeTickets()
+    {
+        return $this->hasMany(WinningTicket::class)->whereNull('participant_id');
+    }
+
     public function addTickets($integer)
     {
         $this->winningTickets()->createMany(array_fill(0, $integer, []));

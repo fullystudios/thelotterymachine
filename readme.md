@@ -7,9 +7,9 @@ This is a Laravel 5.5 project. Technical specifications for Laravel is found [he
 ## Features
 1. A new lottery can be created
 2. A lottery has winning tickets
-3. Emails can be added to the lottery (TODO)
-4. You can draw a winning email from a lottery (TODO)
-5. You can draw as many winning tickets as are available (TODO)
+3. Emails can be added to the lottery
+4. You can draw a winning email from a lottery
+5. You can draw as many winning tickets as are available
 
 ## Getting started - dev
 1. Clone repo

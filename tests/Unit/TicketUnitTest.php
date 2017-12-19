@@ -2,19 +2,19 @@
 
 namespace Tests\Feature;
 
+use App\Ticket;
 use Tests\TestCase;
 use App\Participant;
-use App\WinningTicket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class WinningTicketUnitTest extends TestCase
+class TicketUnitTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
     public function can_assign_a_winner()
     {
-        $ticket = create(WinningTicket::class);
+        $ticket = create(Ticket::class);
         $participant = create(Participant::class);
 
         $ticket->assignWinner($participant);

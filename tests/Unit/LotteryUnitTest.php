@@ -16,7 +16,7 @@ class LotteryUnitTest extends TestCase
     {
         $lottery = create(Lottery::class);
         $lottery->addTickets(2);
-        $this->assertEquals($lottery->winningTickets()->count(), 2);
+        $this->assertEquals($lottery->tickets()->count(), 2);
     }
 
     /** @test */
@@ -31,6 +31,20 @@ class LotteryUnitTest extends TestCase
 
     /** @test */
     public function can_draw_a_winner_for_a_ticket()
+    {
+        $lottery = create(Lottery::class);
+        $participant = make(Participant::class, ['email' => 'jane@example.com']);
+        $lottery->addParticipant($participant->toArray());
+        $lottery->addTickets(2);
+
+        $lottery->drawWinner();
+        $lottery->load('availableTickets');
+        $this->assertEquals($lottery->winners->first()->email, 'jane@example.com');
+        $this->assertCount(1, $lottery->availableTickets);
+    }
+
+    /** @test */
+    public function cannot_draw_a_winner_if_no_tickets_are_available()
     {
         $lottery = create(Lottery::class);
         $participant = make(Participant::class, ['email' => 'jane@example.com']);

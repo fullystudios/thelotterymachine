@@ -76,7 +76,7 @@ class LotteryFeatureTest extends TestCase
         $lotteryParams['tickets'] = 2;
         $response = $this->json('post', route('lottery.store'), $lotteryParams);
 
-        $this->assertEquals(2, Lottery::where('name', 'Laravel Lottery')->first()->winningTickets->count());
+        $this->assertEquals(2, Lottery::where('name', 'Laravel Lottery')->first()->tickets->count());
     }
 
     /** @test */
@@ -89,5 +89,19 @@ class LotteryFeatureTest extends TestCase
         $lottery->addParticipant($participant->toArray());
 
         $this->assertCount(1, $lottery->participants);
+    }
+
+    /** @test */
+    public function can_draw_winner()
+    {
+        $this->withoutExceptionHandling();
+        $lottery = create(Lottery::class);
+        $lottery->addTickets(5);
+        $lottery->addParticipant(make(Participant::class)->toArray());
+        $lottery->addParticipant(make(Participant::class)->toArray());
+        $lottery->addParticipant(make(Participant::class)->toArray());
+        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
+
+        $response->assertRedirect(route('lottery.show', ['lottery' => $lottery]));
     }
 }

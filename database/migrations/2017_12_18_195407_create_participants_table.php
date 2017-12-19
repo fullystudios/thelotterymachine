@@ -21,7 +21,7 @@ class CreateParticipantsTable extends Migration
 
             $table->foreign('lottery_id')->references('id')->on('lotteries');
         });
-        Schema::table('winning_tickets', function (Blueprint $table) {
+        Schema::table('tickets', function (Blueprint $table) {
             $table->unsignedInteger('participant_id')->nullable();
             $table->foreign('participant_id')->references('id')->on('participants');
         });
@@ -35,7 +35,7 @@ class CreateParticipantsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('participants');
-        Schema::table('winning_tickets', function (Blueprint $table) {
+        Schema::table('tickets', function (Blueprint $table) {
             $table->dropColumn('participant_id');
         });
     }

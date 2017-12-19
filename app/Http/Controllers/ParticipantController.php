@@ -12,4 +12,10 @@ class ParticipantController extends Controller
         $lottery->addParticipant($request->all());
         return redirect()->route('lottery.show', ['lottery' => $lottery]);
     }
+
+    public function draw(Request $request, Lottery $lottery)
+    {
+        $lottery->drawWinner();
+        return redirect()->route('lottery.show', ['lottery' => $lottery]);
+    }
 }

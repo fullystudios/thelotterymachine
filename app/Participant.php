@@ -8,9 +8,9 @@ class Participant extends Model
 {
     protected $fillable = ['email'];
 
-    public function winningTicket()
+    public function ticket()
     {
-        return $this->hasOne(WinningTicket::class);
+        return $this->hasOne(Ticket::class);
     }
 
     public function path(Lottery $lottery, $string = 'show')

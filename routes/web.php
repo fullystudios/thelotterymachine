@@ -24,3 +24,4 @@ Route::get('lottery/{lottery}', 'LotteryController@show')->name('lottery.show');
 
 // Participants
 Route::post('lottery/{lottery}/participants', 'ParticipantController@store')->name('participants.store');
+Route::get('lottery/{lottery}/participants/draw', 'ParticipantController@draw')->name('participants.draw');

@@ -8,9 +8,9 @@ class Lottery extends Model
 {
     protected $fillable = ['name'];
 
-    public function winningTickets()
+    public function tickets()
     {
-        return $this->hasMany(WinningTicket::class);
+        return $this->hasMany(Ticket::class);
     }
 
     public function participants()
@@ -20,22 +20,22 @@ class Lottery extends Model
 
     public function winners()
     {
-        return $this->hasMany(Participant::class)->whereHas('winningTicket');
+        return $this->hasMany(Participant::class)->whereHas('ticket');
     }
 
     public function nonWinners()
     {
-        return $this->hasMany(Participant::class)->whereDoesntHave('winningTicket');
+        return $this->hasMany(Participant::class)->whereDoesntHave('ticket');
     }
 
     public function availableTickets()
     {
-        return $this->hasMany(WinningTicket::class)->whereNull('participant_id');
+        return $this->hasMany(Ticket::class)->whereNull('participant_id');
     }
 
     public function addTickets($integer)
     {
-        $this->winningTickets()->createMany(array_fill(0, $integer, []));
+        $this->tickets()->createMany(array_fill(0, $integer, []));
     }
 
     public function addParticipant(array $participant)

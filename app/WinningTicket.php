@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WinningTicket extends Model
+class Ticket extends Model
 {
     protected $fillable = ['participant_id'];
 

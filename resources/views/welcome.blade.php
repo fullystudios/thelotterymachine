@@ -84,6 +84,7 @@
 
                 <div class="links">
                     <a href="{{route('lottery.create')}}">Create a lottery</a>
+                    <a href="{{route('lottery.index')}}">See lotteries</a>
                     
                 </div>
             </div>

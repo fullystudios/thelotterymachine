@@ -9,6 +9,9 @@
 
     </head>
     <body>
+        <header>
+            <h1><a href="{{route('home')}}">The lottery machine</a></h1>
+        </header>
         @yield('content')
     </body>
 </html>

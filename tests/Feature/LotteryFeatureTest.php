@@ -94,14 +94,35 @@ class LotteryFeatureTest extends TestCase
     /** @test */
     public function can_draw_winner()
     {
-        $this->withoutExceptionHandling();
         $lottery = create(Lottery::class);
-        $lottery->addTickets(5);
+        $lottery->addTickets(2);
         $lottery->addParticipant(make(Participant::class)->toArray());
         $lottery->addParticipant(make(Participant::class)->toArray());
-        $lottery->addParticipant(make(Participant::class)->toArray());
+
         $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
 
         $response->assertRedirect(route('lottery.show', ['lottery' => $lottery]));
+    }
+
+    /** @test */
+    public function can_only_draw_winner_if_tickets_are_available()
+    {
+        $lottery = create(Lottery::class);
+        $lottery->addParticipant(make(Participant::class)->toArray());
+        // No tickets
+
+        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function can_only_draw_winner_if_participants_are_available()
+    {
+        $lottery = create(Lottery::class);
+        $lottery->addTickets(1);
+        // No participants
+
+        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
+        $response->assertStatus(422);
     }
 }

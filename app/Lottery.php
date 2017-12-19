@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\NotEnoughTicketsException;
+use App\Exceptions\NotEnoughParticipantsException;
 
 class Lottery extends Model
 {
@@ -45,11 +47,18 @@ class Lottery extends Model
 
     public function drawWinner()
     {
-        $ticket = $this->availableTickets->first();
-
+        $ticket = $this->availableTickets;
+        if ($ticket->count() === 0) {
+            throw new NotEnoughTicketsException;
+            return;
+        }
+        $ticket = $ticket->first();
         $availableParticipants = $this->nonWinners;
+        if ($availableParticipants->count() === 0) {
+            throw new NotEnoughParticipantsException;
+            return;
+        }
         $winner = $availableParticipants->random(1)->first();
-
         $ticket->assignWinner($winner);
     }
 

@@ -17,6 +17,7 @@ class CreateLotteriesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('creator_id')->nullable();
             $table->string('name');
+            $table->string('share_key');
             $table->timestamps();
 
             $table->foreign('creator_id')->references('id')->on('users');

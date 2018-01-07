@@ -10,6 +10,14 @@ class Lottery extends Model
 {
     protected $fillable = ['name', 'creator_id'];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::saving(function ($model) {
+            $model->share_key = str_random(20);
+        });
+    }
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);

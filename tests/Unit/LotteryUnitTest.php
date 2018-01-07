@@ -56,4 +56,14 @@ class LotteryUnitTest extends TestCase
         $this->assertEquals($lottery->winners->first()->email, 'jane@example.com');
         $this->assertCount(1, $lottery->availableTickets);
     }
+
+    /** @test */
+    public function gets_share_key_on_save()
+    {
+        $lottery = create(Lottery::class);
+        
+        $lottery->fresh();
+
+        $this->assertNotNull($lottery->share_key);
+    }
 }

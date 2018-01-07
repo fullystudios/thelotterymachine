@@ -1,4 +1,4 @@
-image: gitlab.fullystudios.se:4567/fullystudios/luncheon:latest
+image: gitlab.fullystudios.se:4567/fullystudios/bauerloans:latest
 
 services:
   - mysql:5.7

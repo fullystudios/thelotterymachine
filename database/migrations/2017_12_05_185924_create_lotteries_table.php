@@ -15,8 +15,11 @@ class CreateLotteriesTable extends Migration
     {
         Schema::create('lotteries', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('creator_id')->nullable();
             $table->string('name');
             $table->timestamps();
+
+            $table->foreign('creator_id')->references('id')->on('users');
         });
     }
 

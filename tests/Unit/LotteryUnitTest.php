@@ -32,10 +32,10 @@ class LotteryUnitTest extends TestCase
     /** @test */
     public function can_draw_a_winner_for_a_ticket()
     {
-        $lottery = create(Lottery::class);
         $participant = make(Participant::class, ['email' => 'jane@example.com']);
-        $lottery->addParticipant($participant->toArray());
-        $lottery->addTickets(2);
+        $lottery = create(Lottery::class)
+            ->addTickets(2)
+            ->addParticipant($participant->toArray());
 
         $lottery->drawWinner();
         $lottery->load('availableTickets');

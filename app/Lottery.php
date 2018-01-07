@@ -8,7 +8,7 @@ use App\Exceptions\NotEnoughParticipantsException;
 
 class Lottery extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'creator_id'];
 
     public function tickets()
     {
@@ -38,11 +38,13 @@ class Lottery extends Model
     public function addTickets($integer)
     {
         $this->tickets()->createMany(array_fill(0, $integer, []));
+        return $this;
     }
 
     public function addParticipant(array $participant)
     {
         $this->participants()->save(new Participant($participant));
+        return $this;
     }
 
     public function drawWinner()

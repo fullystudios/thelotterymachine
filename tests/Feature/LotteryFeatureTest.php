@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use App\Lottery;
 use Tests\TestCase;
 use App\Participant;
@@ -11,19 +12,53 @@ class LotteryFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_new_lottery_can_be_created()
+    private function lotteryParams(array $overrides = [])
     {
-        $lottery = make(Lottery::class, ['name' => 'Laravel Lottery']);
+        $params = make(Lottery::class, ['name' => 'Laravel Lotterty'])->toArray();
+        $params['tickets'] = 2;
 
-        $response = $this->json('post', route('lottery.store'), $lottery->toArray());
-
-        $this->assertEquals(1, Lottery::where('name', 'Laravel Lottery')->count());
+        $params = array_merge($params, $overrides);
+        return $params;
     }
 
     /** @test */
-    public function form_has_correct_inputs()
+    public function a_logged_in_user_can_visit_create_lottery_form()
     {
+        $this->be(create(User::class));
+
+        $response = $this->get('lottery/create');
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_logged_in_user_can_create_a_lottery()
+    {
+        $lottery = $this->lotteryParams();
+        $user = create(User::class);
+        $this->be($user);
+
+        $response = $this->json('post', route('lottery.store'), $lottery);
+        $this->assertEquals(1, Lottery::where('creator_id', $user->id)->count());
+    }
+
+    /** @test */
+    public function a_logged_out_user_cannot_create_a_lottery()
+    {
+        $lottery = $this->lotteryParams();
+
+        $response = $this->get(route('lottery.create'));
+        $response->assertStatus(302);
+
+        $response = $this->json('post', route('lottery.store'), $lottery);
+
+        $this->assertEquals(0, Lottery::where('name', 'Laravel Lottery')->count());
+    }
+
+    /** @test */
+    public function create_lottery_form_has_correct_inputs()
+    {
+        $this->be(create(User::class));
         $response = $this->get(route('lottery.create'));
         $response->assertSee('name="name"');
         $response->assertSee('name="tickets"');
@@ -31,22 +66,13 @@ class LotteryFeatureTest extends TestCase
     }
 
     /** @test */
-    public function when_editing_a_lottery_you_can_add_participants__fields_are_seen()
-    {
-        $lottery = create(Lottery::class);
-        $participant = make(Participant::class, ['email' => 'jane@example.com']);
-        $response = $this->get($lottery->path('edit'));
-
-        $response->assertSee('name="email"');
-        $response->assertSee('button type="submit"');
-    }
-
-    /** @test */
     public function lottery_details_are_shown_on_lottery_page()
     {
-        $lottery = create(Lottery::class, ['name' => 'Some lottery name that does not exist until now']);
+        $user = create(User::class);
         $participant = make(Participant::class, ['email' => 'jane@example.com']);
-        $lottery->addParticipant($participant->toArray());
+        $lottery = create(Lottery::class, ['creator_id' => $user->id])->addParticipant($participant->toArray());
+
+        $this->be($user);
         $response = $this->get(route('lottery.show', $lottery));
 
         $editLotteryPath = $lottery->path('edit');
@@ -57,72 +83,30 @@ class LotteryFeatureTest extends TestCase
     }
 
     /** @test */
-    public function lotteries_page_lists_lotteries()
+    public function lotteries_page_lists_lottery_creators_lotteries()
     {
-        $lotteryA = create(Lottery::class, ['name' => 'Super lottery A']);
-        $lotteryB = create(Lottery::class, ['name' => 'Super lottery B']);
+        $user = create(User::class);
+        $lotteryA = create(Lottery::class, ['name' => 'Super lottery A', 'creator_id' => $user->id]);
+        $lotteryB = create(Lottery::class, ['name' => 'Super lottery B', 'creator_id' => $user->id]);
+        $lotteryC = create(Lottery::class, ['name' => 'Super lottery C', 'creator_id' => $user->id + 1]);
 
+        $this->be($user);
         $response = $this->get(route('lottery.index'));
 
         $response->assertStatus(200);
         $response->assertSee($lotteryA->name);
         $response->assertSee($lotteryB->name);
+        $response->assertDontSee($lotteryC->name);
     }
 
     /** @test */
     public function when_lottery_is_created_corresponding_winning_tickets_are_created()
     {
+        $this->be(create(User::class));
         $lotteryParams = make(Lottery::class, ['name' => 'Laravel Lottery'])->toArray();
         $lotteryParams['tickets'] = 2;
         $response = $this->json('post', route('lottery.store'), $lotteryParams);
 
         $this->assertEquals(2, Lottery::where('name', 'Laravel Lottery')->first()->tickets->count());
-    }
-
-    /** @test */
-    public function participants_can_be_added_in_lottery()
-    {
-        $participant = make(Participant::class, ['email' => 'jane@example.com']);
-
-        $lottery = create(Lottery::class);
-
-        $lottery->addParticipant($participant->toArray());
-
-        $this->assertCount(1, $lottery->participants);
-    }
-
-    /** @test */
-    public function can_draw_winner()
-    {
-        $lottery = create(Lottery::class);
-        $lottery->addTickets(2);
-        $lottery->addParticipant(make(Participant::class)->toArray());
-        $lottery->addParticipant(make(Participant::class)->toArray());
-
-        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
-
-        $response->assertRedirect(route('lottery.show', ['lottery' => $lottery]));
-    }
-
-    /** @test */
-    public function can_only_draw_winner_if_tickets_are_available()
-    {
-        $lottery = create(Lottery::class);
-        $lottery->addParticipant(make(Participant::class)->toArray());
-        // No tickets
-
-        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
-        $response->assertStatus(422);
-    }
-
-    /** @test */
-    public function can_only_draw_winner_if_participants_are_available()
-    {
-        $lottery = create(Lottery::class);
-        $lottery->addTickets(1);
-        // No participants
-
-        $response = $this->get(route('participants.draw', ['lottery' => $lottery]));
-        $response->assertStatus(422);
     }
 }

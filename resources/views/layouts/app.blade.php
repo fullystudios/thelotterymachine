@@ -29,7 +29,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        The Lottery Machine
                     </a>
                 </div>
 
@@ -71,7 +71,11 @@
             </div>
         </nav>
 
-        @yield('content')
+        <div class="flex-center position-ref full-height">
+            <div class="content">
+                @yield('content')
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->

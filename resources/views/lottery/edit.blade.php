@@ -1,15 +1,20 @@
 @extends('layouts.app')
 @section('content')
-    <h1>{{$lottery->name}}</h1>
-    <form action="{{route('participants.store', ['lottery' => $lottery])}}" method="POST">
+    <h1 class="m-b-md"><small>Add participant to lottery:</small><br>{{$lottery->name}}</h1>
+    <form class="m-b-lg" action="{{route('participants.store', ['lottery' => $lottery])}}" method="POST">
         {{csrf_field()}}
-        <label>Participant email:</label>
-        <input type="text" name="email">
-        <button type="submit">Submit</button>
+        <div class="form-group">
+            <label>Participant email:</label>
+            <input class="form-control" type="text" name="email">
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
-    <ul>
+
+    <ul class="list-group">
+        <h3>Current participants</h3>
+        <p>Number of participants: {{$lottery->participants->count()}}</p>
         @foreach($lottery->participants as $participant)
-            <li>{{$participant->email}}</li>
+            <li class="list-group-item">{{$participant->email}}</li>
         @endforeach
     </ul>
 @endsection

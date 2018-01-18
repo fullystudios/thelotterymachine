@@ -23,7 +23,7 @@ class ParticipantFeatureTest extends TestCase
         $response = $this->get($lottery->path('edit'));
 
         $response->assertSee('name="email"');
-        $response->assertSee('button type="submit"');
+        $response->assertSee('type="submit"');
     }
 
     /** @test */

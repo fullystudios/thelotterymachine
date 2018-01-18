@@ -14,11 +14,11 @@ This is a Laravel 5.5 project. Technical specifications for Laravel is found [he
 
 ## Getting started - dev
 1. Clone repo
-2. Composer install
-3. Yarn or NPM install
+2. `composer install`
+3. `yarn` or `npm install`
 4. Setup .env file for your environment
 5. Run `php artisan key:generate`
-6. Run migrations
+6. Run migrations `php artisan migrate`
 
 #### Getting help - dev
 Leave an issue on Github, also me (Mikael) is on laravelse.slack.com as well as … well other places.

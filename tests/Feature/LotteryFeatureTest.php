@@ -79,7 +79,6 @@ class LotteryFeatureTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($lottery->name);
         $response->assertSee($participant->email);
-        $response->assertSee("<a href=\"{$editLotteryPath}\">Add participant</a>");
     }
 
     /** @test */

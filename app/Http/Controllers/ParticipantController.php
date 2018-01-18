@@ -21,8 +21,9 @@ class ParticipantController extends Controller
             $lottery->drawWinner();
             return redirect()->route('lottery.show', ['lottery' => $lottery]);
         } catch (NotEnoughTicketsException $e) {
-            return response()->json(['Not enough tickets'], 422);
+            abort(422, 'Not enough tickets');
         } catch (NotEnoughParticipantsException $e) {
+            abort(422, 'Not enough participants');
             return response()->json(['Not enough participants'], 422);
         }
     }
